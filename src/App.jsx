@@ -14,13 +14,13 @@ function App() {
       const pokemonData = await Promise.all(
         res.data.results.map(async (pokemon) => {
           const r = await axios(pokemon.url)
-          return {
-            name: pokemon.name,
-            image: r.data.sprites.other["official-artwork"].front_default
-          }
+          const name = r.data.name
+          const image = r.data.sprites.other["official-artwork"].front_default
+          const types = r.data.types.map(type => type.type.name)
+          return { name, image, types }
         })
       )
-
+      console.dir(pokemonData)
       setPokemonArr(pokemonData)
     }
     getData()
@@ -30,7 +30,7 @@ function App() {
     <>
       <div className="p-2 bg-white flex flex-col justify-center items-center flex-wrap gap-2 sm:flex-row">
         {
-          pokemonArr.map(({ name, image }, idx) => <Card key={idx} name={name} image={image} />)
+          pokemonArr.map((pokemon, idx) => <Card key={idx} pokemon={pokemon} />)
         }
       </div>
       <div className="flex items-center justify-center gap-4 p-4">
